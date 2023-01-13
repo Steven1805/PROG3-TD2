@@ -1,6 +1,6 @@
 create table if not exists "matchs"
 (
-    id integer constraint PK_MATCH primary key,
+    id serial constraint PK_MATCH primary key,
     team1_id integer constraint FK_MATCH_TEAM1
         references teams(id),
     team2_id integer constraint FK_MATCH_TEAM2

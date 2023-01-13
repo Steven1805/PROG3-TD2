@@ -1,6 +1,6 @@
 create table if not exists "players"
 (
-    id integer constraint PK_PLAYER primary key,
+    id serial constraint PK_PLAYER primary key,
     name varchar NOT NULL,
     number integer NOT NULL,
     is_goalkeeper boolean DEFAULT FALSE,
