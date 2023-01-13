@@ -13,6 +13,9 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "match_goals")
 public class Goal {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
     @ManyToOne(optional = false)
     @JoinColumn(name="match_id")
     private Match match;
@@ -20,8 +23,8 @@ public class Goal {
     @JoinColumn(name="player_id")
     private Player player;
     @ManyToOne(optional = false)
-    @JoinColumn(name="beneficiary_team_id")
-    private Team benificaryTeam;
+    @JoinColumn(name="benificiary_team_id")
+    private Team beneficiaryTeam;
     @Column(nullable = false)
     private int minute;
 }
