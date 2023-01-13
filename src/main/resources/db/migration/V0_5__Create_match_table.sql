@@ -6,5 +6,6 @@ create table if not exists "matchs"
     team2_id integer constraint FK_MATCH_TEAM2
             references teams(id),
     stadium_id integer constraint FK_MATCH_STADIUM
-        references stadiums(id)
+        references stadiums(id),
+    datetime timestamp NOT NULL
 );
