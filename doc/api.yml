@@ -1,0 +1,199 @@
+openapi: 3.0.3
+info:
+  version: '1.0'
+  title: HEI Admin API
+  description: |
+    _devoir Ryan Foot
+
+security:
+  - BearerAuth: [ ]
+
+paths:
+  '/matchs':
+    get:
+      tags:
+        - Matchs
+      summary: get all matches
+      operationId: getMatchs
+      responses:
+        '200':
+          description: List of all matches
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Match'
+          '400':
+            $ref: '#/components/responses/400'
+          '403':
+            $ref: '#/components/responses/403'
+          '404':
+            $ref: '#/components/responses/404'
+          '429':
+            $ref: '#/components/responses/429'
+          '500':
+            $ref: '#/components/responses/500'
+  '/matchs/{id}':
+    get:
+      tags:
+        - Matchs
+      summary: Get match by identifier
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      operationId: getMatch
+      responses:
+        '200':
+          description: The identified match
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DetailedMatch'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '429':
+          $ref: '#/components/responses/429'
+        '500':
+          $ref: '#/components/responses/500'
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+  responses:
+    '400':
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BadRequestException'
+    '403':
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NotAuthorizedException'
+    '404':
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResourceNotFoundException'
+    '429':
+      description: Too many requests to the API
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TooManyRequestsException'
+    '500':
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InternalServerException'
+  schemas:
+    Player:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+    Sponsor:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+    Team:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        players:
+          type: array
+          items:
+            $ref: '#/components/schemas/Player'
+        sponsors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Sponsor'
+    Match:
+      type: object
+      properties:
+        id:
+          type: integer
+        team1:
+          $ref: '#/components/schemas/Team'
+        team2:
+          $ref: '#/components/schemas/Team'
+        datetime:
+          type: string
+    Goal:
+      type: object
+      properties:
+        minute:
+          type: integer
+        player:
+          $ref: '#/components/schemas/Player'
+    MatchDetail:
+      allOf:
+        - $ref: '#/components/schemas/Match'
+      type: object
+      properties:
+        team1Goals:
+          type: array
+          items:
+            $ref: '#/components/schemas/Goal'
+        team2Goals:
+          type: array
+          items:
+            $ref: '#/components/schemas/Goal'
+    Exception:
+      type: object
+      properties:
+        id:
+          type: string
+        message:
+          type: string
+    BadRequestException:
+      allOf:
+        - $ref: '#/components/schemas/Exception'
+      example:
+        type: BadRequestException
+        message: Bad request
+    NotAuthorizedException:
+      allOf:
+        - $ref: '#/components/schemas/Exception'
+      example:
+        type: NotAuthorizedException
+        message: Not authorized
+    ResourceNotFoundException:
+      allOf:
+        - $ref: '#/components/schemas/Exception'
+      example:
+        type: ResourceNotFoundException
+        message: Resource of type <T> identified by <I> not found
+    TooManyRequestsException:
+      allOf:
+        - $ref: '#/components/schemas/Exception'
+      example:
+        type: TooManyRequestsException
+        message: Too many requests
+    InternalServerException:
+      allOf:
+        - $ref: '#/components/schemas/Exception'
+      example:
+        type: InternalServerException
+        message: Unexpected error
